@@ -1,0 +1,78 @@
+
+1. Return a query that returns all employees with the first names, as well as the counts in the firm.
+
+- select first_name, count(*) from employees
+- group by first_name
+- Having count(*) > 1
+
+or
+
+- select first_name, count(first_name) from employees
+- group by first_name
+- Having count(first_name) > 1
+
+2. Return the distinct departments in the firm without using the DISTINCT function
+
+- select department from employees
+- group by department
+
+
+3.  Write a query that returns the domain names and count of employees using the domain name
+    (exclude employees with no email/domain name in their records (null values))
+
+- select substring(email, position('@' in email)+ 1) email_domain, count(*) as "Number of Employees with the Domain Name" from employees
+- where substring(email, position('@' in email)+ 1) IS NOT NULL
+- group by substring(email, position('@' in email)+ 1)
+- order by "Number of Employees with the Domain Name"  desc
+
+4. Write a query that returns the gender, region_id, minimum- max and avg salary of all employees in an orderly manner 
+  ( the table was displayed- then we write a query to return the exacr details of the table)
+
+- select gender, region_id, min(salary), max(salary), round(avg(salary)) from employees group by gender, region_id order by gender, region_id
+
+
+5. From the fruit_import table, write a query that displays only the state with the largest amount of fruit supply.
+- select state from fruit_imports
+- group by state
+- order sum(supply) desc
+- limit 1
+
+6. Write a query that returns the most expensive cost_per_unit of every season. The query should display 2 columns; the season and the cost_per_unit
+
+- select season, max(cost_per_unit) from fruit_imports
+- group by season
+
+
+7. write a query that returns the state has more than 1 import of the same fruit.
+
+- select state, count(name) from fruit_imports
+- group by state, name
+- having count(name) > 1
+
+
+8. Write a query that returns the sesason that produces either 3 fruits or 4 fruits
+
+- select season, count(name) from fruit_imports
+- group by season
+- having count(name) = 3 or count(name) = 4
+
+
+9. Write a query that takes into consideration the supply and cost_per_unit columns for determining the total cost and returns the most expensie state with the total
+   cost.
+- select state, sum(supply * cost_per_unit) total_cost from fruit_imports
+- group by state
+- order by total_cost desc
+- limit 1
+
+10. Using table 
+* create table fruits (fruit_name varchar(10));
+* insert into fruits values ('orange');
+* insert into fruits values ('Apple');
+* insert into fruits values (null);
+* insert into fruits values (null);
+
+write  query that returns the count of 4. You'll need to count on the column fruit_name and not use Count(*)
+
+- select fruit_name, count(coalesce(fruit_name)) from fruits
+- where fruit_name is not null 
+- group by fruit_name
