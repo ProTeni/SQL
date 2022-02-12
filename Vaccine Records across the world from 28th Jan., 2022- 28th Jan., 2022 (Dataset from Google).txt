@@ -1,0 +1,58 @@
+Data Importation:
+
+* create table geo_map
+(
+country varchar(100),
+vaccine numeric);
+
+copy public.geo_map from 'C:\Users\Asus\Desktop\geoMap.csv' DELIMITER ',' csv HEADER;
+
+
+Questions I was curiously queried the dataset on:
+
+1. What are the top 10 countries in the world with the highest 
+Covid-19 vaccine exercise between Jan 2021 and Jan 2022?
+
+ * select distinct country, max(vaccine) as "Number of Covid-19 Vaccines Adminstered"
+from geo_map
+where vaccine is not null
+group by distinct country
+order by max(vaccine) desc
+limit 10
+
+2. What are the top 3 countries with the least vaccine exercise?
+
+* select distinct country, min(vaccine) 
+as "Number of Vaccines Administered between Jan, 2021 and Jan, 2022" 
+from geo_map 
+where vaccine is not null
+group by distinct country 
+order by min(vaccine) asc
+limit 3
+
+
+3. How many vaccine doses have been administered between the date range?
+
+*select sum (vaccine) 
+as "Total Doeses Aminstered in the world between Jan., 2021-Jan, 2022" 
+from geo_map
+
+4. Which countries didn't have any vaccine record? Why? was it due to lack if resources to the vaccines 
+	or simply because they had no COVID record in the country?
+
+* select distinct country, coalesce (vaccine, 0) "Number of Vaccines Administered"
+from geo_map where vaccine is null 
+order by country 
+--I ran some google research and found that most of the coutries had no record mostly due to vaccine shortage than 
+  due to lack of Covid-19 occurence
+
+5. In a sentence, state the country and the number of vaccines that were adminstered within given the date range
+
+* select country || ' had ' || vaccine || 
+' records of Covid-19 vaccines'
+as "World Record of Covid-19 Vaccines between Jan 2021 and Jan 2022"
+from geo_map
+where vaccine is not null
+order by country, vaccine desc
+
+
